@@ -14,6 +14,8 @@ module.exports = (req, res) => {
     statusCode = 500;
   } else {
     if (query.pkcs12) {
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'attachment; filename="client.cert.p12"');
       send(res, statusCode, fs.createReadStream('/etc/ipsec.d/client.cert.p12'));
       return
     }
