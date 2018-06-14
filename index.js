@@ -11,8 +11,9 @@ module.exports = (req, res) => {
   } else {
     Object.assign(data, {
       ca: fs.readFileSync('/etc/ipsec.d/cacerts/ca.cert.pem', 'utf8'),
-      private_key: fs.readFileSync('/etc/ipsec.d/private/client.pem', 'utf8'),
-      certificate: fs.readFileSync('/etc/ipsec.d/certs/client.cert.pem', 'utf8'),
+      key: fs.readFileSync('/etc/ipsec.d/private/client.pem', 'utf8'),
+      cert: fs.readFileSync('/etc/ipsec.d/certs/client.cert.pem', 'utf8'),
+      pkcs12: fs.readFileSync('/etc/ipsec.d/client.cert.p12', 'utf8'),
       password: fs.readFileSync('/etc/ipsec.d/client.cert.p12.password', 'utf8')
     });
   }
