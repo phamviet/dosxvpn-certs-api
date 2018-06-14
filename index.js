@@ -1,7 +1,11 @@
 const fs = require('fs');
+const url = require('url');
 const { send } = require('micro');
 
 module.exports = (req, res) => {
+  const urlParts = url.parse(req.url, true);
+  const query = urlParts.query;
+  
   let statusCode = 200;
   const data = {};
 
@@ -9,11 +13,15 @@ module.exports = (req, res) => {
     data.error = 'CA certificate is not found';
     statusCode = 500;
   } else {
+    if (query.pkcs12) {
+      send(res, statusCode, fs.createReadStream('/etc/ipsec.d/client.cert.p12'));
+      return
+    }
+    
     Object.assign(data, {
       ca: fs.readFileSync('/etc/ipsec.d/cacerts/ca.cert.pem', 'utf8'),
       key: fs.readFileSync('/etc/ipsec.d/private/client.pem', 'utf8'),
       cert: fs.readFileSync('/etc/ipsec.d/certs/client.cert.pem', 'utf8'),
-      pkcs12: fs.readFileSync('/etc/ipsec.d/client.cert.p12', 'utf8'),
       password: fs.readFileSync('/etc/ipsec.d/client.cert.p12.password', 'utf8')
     });
   }
